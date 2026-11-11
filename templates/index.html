@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f3ed">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Fieldnotes | Document assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <div class="workspace">
+    <aside class="library" aria-label="Document library">
+      <a class="wordmark" href="/" aria-label="Fieldnotes home">
+        <span class="mark" aria-hidden="true">F</span>
+        <span>fieldnotes<span class="wordmark-dot">.</span></span>
+      </a>
+
+      <div class="library-heading">
+        <div>
+          <p class="eyebrow">YOUR KNOWLEDGE BASE</p>
+          <h1>Documents</h1>
+        </div>
+        <span id="document-count" class="count">0</span>
+      </div>
+
+      <form id="upload-form" class="upload-box">
+        <input id="file-input" name="file" type="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" hidden>
+        <button id="upload-button" class="upload-button" type="button">
+          <span class="upload-icon" aria-hidden="true">+</span>
+          <span>Add documents</span>
+        </button>
+        <p>PDF, TXT or Markdown<br>Up to 25 MB per file</p>
+      </form>
+      <p id="upload-status" class="upload-status" role="status" aria-live="polite"></p>
+
+      <div class="source-heading">
+        <span>IN THIS SPACE</span>
+        <span class="source-line"></span>
+      </div>
+      <ul id="document-list" class="document-list" aria-live="polite"></ul>
+
+      <div class="local-note">
+        <span class="local-indicator" aria-hidden="true"></span>
+        <div><strong>Private by design</strong><span>Answers generated with Ollama on this machine</span></div>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong>Ask your documents</strong></div>
+        <div class="topbar-actions">
+          <div class="model-status"><span class="status-dot" aria-hidden="true"></span><span>OLLAMA <b>LLAMA 3</b></span></div>
+          <form action="{{ url_for('logout') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="logout-button" type="submit">Sign out</button>
+          </form>
+        </div>
+      </header>
+
+      <section class="conversation" aria-label="Chat with your documents">
+        <div id="welcome" class="welcome">
+          <div class="welcome-glyph" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p class="eyebrow">A CLEARER WAY THROUGH YOUR FILES</p>
+          <h2>Find the thread<br><em>in your documents.</em></h2>
+          <p class="welcome-copy">Add your notes, reports, or PDFs. Ask a question and get an answer grounded in what you shared.</p>
+          <div class="prompt-suggestions" aria-label="Suggested questions">
+            <button type="button" class="suggestion">What are the key points?</button>
+            <button type="button" class="suggestion">Summarize these documents</button>
+          </div>
+        </div>
+        <div id="messages" class="messages" aria-live="polite" aria-relevant="additions"></div>
+      </section>
+
+      <form id="chat-form" class="composer">
+        <label class="visually-hidden" for="question-input">Ask a question about your documents</label>
+        <textarea id="question-input" name="question" rows="1" maxlength="2000" placeholder="Ask anything about your documents..." required></textarea>
+        <div class="composer-footer">
+          <span class="composer-hint"><span class="hint-mark" aria-hidden="true">↳</span> Answers are based on your uploaded files</span>
+          <button id="send-button" class="send-button" type="submit" aria-label="Send question" title="Send question">
+            <span aria-hidden="true">↑</span>
+          </button>
+        </div>
+      </form>
+      <p class="footer-note">Local AI can make mistakes. Check important details against the source documents.</p>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Uploaded documents may contain private information.
+data/*
+!data/.gitkeep
